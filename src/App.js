@@ -1,6 +1,8 @@
 import "./App.css";
-import { Button, Container, ThemeProvider, Typography, createTheme } from "@mui/material";
+import {  Container, ThemeProvider, Typography, createTheme } from "@mui/material";
 import CloudIcon from "@mui/icons-material/Cloud"
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const theme = createTheme({
 	typography: {
@@ -9,21 +11,47 @@ const theme = createTheme({
 })
 
 function App() {
+	const [temp, setTemp] = useState({
+		number: 0,
+		description: "",
+		min: 0,
+		max: 0,
+		icon: ""
+	})
+	useEffect(() => {
+		axios.get("https://api.openweathermap.org/data/2.5/weather?lat=33.589886&lon=-7.603869&appid=03a8280ea3f54d3e3e156228168d5f6a")
+			.then((res) => {
+				const newTemp = {
+					number: (res.data.main.temp - 272, 15),
+					description: (res.data.weather[0].description),
+					min: (res.data.main.temp_min - 272, 15),
+					max: (res.data.main.temp_max - 272, 15),
+					icon: ""
+				}
+				setTemp(newTemp);
+				console.log(newTemp);
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+			.finally(() => {
+			})
+
+	}, [])
 
 	return (
 		<div className="App">
 			<ThemeProvider theme={theme}>
 				<Container maxWidth="sm">
 					{/* Container */}
-					<div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center", flexDirection:"column" }}>
+					<div style={{ height: "100vh", display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
 						{/* Card */}
 						<div
-							dir="rtl"
 							style={{ backgroundColor: "rgb(28 52 91 / 36%)", color: "white", padding: "10px", borderRadius: "15px", boxShadow: "0px 11px 1px rgba(0,0,0,0.05)", width: "100%" }}>
 							{/* Content */}
 							<div>
 								{/* City And Time */}
-								<div style={{ display: "flex", alignItems: "end", justifyContent: "start" }} dir="rtl">
+								<div style={{ display: "flex", alignItems: "end", justifyContent: "start" }}>
 									<Typography variant="h2" style={{ marginRight: "20px" }}>
 										الدار البيضاء
 									</Typography>
@@ -40,21 +68,21 @@ function App() {
 										{/* Temp */}
 										<div>
 											<Typography variant="h1" style={{ textAlign: "right" }}>
-												38
+												{temp.number}
 											</Typography>
 											{/* IMG */}
 											{/*==== IMG ====*/}
 										</div>
 										{/*==== Temp ====*/}
 
-										<Typography variant="h6" style={{textAlign:"right"}}>
-											broken clouds
+										<Typography variant="h6" style={{ textAlign: "right" }}>
+											{temp.description}
 										</Typography>
 										{/* Min And Max */}
 										<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-											<h5>الصغرى : 45</h5>
-											<h5 style={{ margin:"0 10px" }}>|</h5>
-											<h5>الكبرى : 23</h5>
+											<h5>الصغرى : {temp.min}</h5>
+											<h5 style={{ margin: "0 10px" }}>|</h5>
+											<h5>الكبرى : {temp.max}</h5>
 										</div>
 										{/* Min And Max */}
 									</div>
@@ -66,7 +94,6 @@ function App() {
 							{/*==== Content ====*/}
 						</div>
 						{/*==== Card ====*/}
-					<Button variant="text" style={{color:"white", marginTop:"10px"}}>انجليزي</Button>
 					</div>
 					{/*==== Container ====*/}
 				</Container>
