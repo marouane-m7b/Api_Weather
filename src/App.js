@@ -1,5 +1,5 @@
 import "./App.css";
-import {  Container, ThemeProvider, Typography, createTheme } from "@mui/material";
+import { Container, ThemeProvider, Typography, createTheme } from "@mui/material";
 import CloudIcon from "@mui/icons-material/Cloud"
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -11,6 +11,7 @@ const theme = createTheme({
 })
 
 function App() {
+	const today = new Date()
 	const [temp, setTemp] = useState({
 		number: 0,
 		description: "",
@@ -26,7 +27,7 @@ function App() {
 					description: (res.data.weather[0].description),
 					min: (res.data.main.temp_min - 272, 15),
 					max: (res.data.main.temp_max - 272, 15),
-					icon: ""
+					icon: (res.data.weather[0].icon)
 				}
 				setTemp(newTemp);
 				console.log(newTemp);
@@ -53,10 +54,10 @@ function App() {
 								{/* City And Time */}
 								<div style={{ display: "flex", alignItems: "end", justifyContent: "start" }}>
 									<Typography variant="h2" style={{ marginRight: "20px" }}>
-										الدار البيضاء
+										Casablanca
 									</Typography>
-									<Typography variant="h5" style={{ marginRight: "20px" }}>
-										15 / 22 / مارس
+									<Typography variant="h6" style={{ marginRight: "20px" }}>
+										{today.getDate()} /{today.getMonth()+1} /{today.getFullYear()}
 									</Typography>
 								</div>
 								{/* City And Time */}
@@ -66,23 +67,24 @@ function App() {
 									{/* Dgree And Description */}
 									<div>
 										{/* Temp */}
-										<div>
-											<Typography variant="h1" style={{ textAlign: "right" }}>
+										<div style={{ display:"flex" }}>
+											<Typography variant="h1" style={{ textAlign: "left" }}>
 												{temp.number}
 											</Typography>
 											{/* IMG */}
+											<img src={`https://openweathermap.org/img/wn/${temp.icon}@2x.png`} alt="" />
 											{/*==== IMG ====*/}
 										</div>
 										{/*==== Temp ====*/}
 
-										<Typography variant="h6" style={{ textAlign: "right" }}>
+										<Typography variant="h6" style={{ textAlign: "left" }}>
 											{temp.description}
 										</Typography>
 										{/* Min And Max */}
 										<div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-											<h5>الصغرى : {temp.min}</h5>
+											<h5>min: {temp.min}</h5>
 											<h5 style={{ margin: "0 10px" }}>|</h5>
-											<h5>الكبرى : {temp.max}</h5>
+											<h5>max: {temp.max}</h5>
 										</div>
 										{/* Min And Max */}
 									</div>
